@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const S = 64;
@@ -116,6 +116,35 @@ export const BackgroundRippleEffect = ({ className }: { className?: string }) =>
       rafRef.current = requestAnimationFrame(draw);
     };
 
+    // ✅ Listen on the parent container (whole page), not just canvas
+    // so hover + click work even when cursor is over the card/content
+    const parent = canvas.parentElement;
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      hoverRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+    };
+
+    const onMouseLeave = () => {
+      hoverRef.current = null;
+    };
+
+    const onClick = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      wavesRef.current.push({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        start: performance.now(),
+      });
+    };
+
+    parent?.addEventListener("mousemove", onMouseMove);
+    parent?.addEventListener("mouseleave", onMouseLeave);
+    parent?.addEventListener("click", onClick);
+
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
     resize();
@@ -124,38 +153,17 @@ export const BackgroundRippleEffect = ({ className }: { className?: string }) =>
     return () => {
       ro.disconnect();
       cancelAnimationFrame(rafRef.current);
+      parent?.removeEventListener("mousemove", onMouseMove);
+      parent?.removeEventListener("mouseleave", onMouseLeave);
+      parent?.removeEventListener("click", onClick);
     };
-  }, []);
-
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    hoverRef.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
-  }, []);
-
-  const onMouseLeave = useCallback(() => {
-    hoverRef.current = null;
-  }, []);
-
-  const onClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    wavesRef.current.push({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      start: performance.now(),
-    });
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className={cn("absolute inset-0 z-0 cursor-crosshair", className)}
+      className={cn("absolute inset-0 z-0", className)}
       style={{ width: "100%", height: "100%" }}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
     />
   );
 };
