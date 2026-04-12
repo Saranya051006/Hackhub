@@ -5,6 +5,9 @@ import FeaturedEvent from "@/components/custom/FeaturedEvent";
 
 
 
+
+
+
 export default function Home() {
   return (
     <>
@@ -12,6 +15,8 @@ export default function Home() {
       <Hero />
       <SearchBar />
       <FeaturedEvent />
+
+
     </>
   );
 }
