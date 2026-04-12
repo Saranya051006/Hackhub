@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 export default function FeaturedEvent() {
     return (
@@ -15,28 +16,14 @@ export default function FeaturedEvent() {
                 <div className="grid grid-cols-[1.2fr_1fr] rounded-2xl overflow-hidden border border-white/[0.07] bg-[#141416]">
 
                     {/* LEFT: Event Image */}
-                    <div className="relative min-h-[380px] bg-[#0e0e10] overflow-hidden">
-                        {/* Simulated dark cyber image with gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/60 via-[#0e0e10] to-[#0e0e10]" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            {/* Decorative cyber grid */}
-                            <svg className="w-full h-full opacity-20" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#7c3aed" strokeWidth="0.5" />
-                                    </pattern>
-                                </defs>
-                                <rect width="100%" height="100%" fill="url(#grid)" />
-                                <circle cx="250" cy="200" r="80" fill="none" stroke="#7c3aed" strokeWidth="1" opacity="0.6" />
-                                <circle cx="250" cy="200" r="120" fill="none" stroke="#6d28d9" strokeWidth="0.5" opacity="0.4" />
-                                <circle cx="250" cy="200" r="160" fill="none" stroke="#5b21b6" strokeWidth="0.5" opacity="0.2" />
-                                {/* Hexagons */}
-                                <polygon points="250,140 290,165 290,215 250,240 210,215 210,165" fill="none" stroke="#8b5cf6" strokeWidth="1" opacity="0.7" />
-                                <polygon points="250,155 280,172 280,208 250,225 220,208 220,172" fill="#7c3aed" fillOpacity="0.15" stroke="#7c3aed" strokeWidth="0.5" />
-                            </svg>
-                        </div>
-                        {/* Bottom glow */}
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-24 bg-violet-600/30 rounded-full blur-3xl" />
+                    <div className="relative min-h-[380px] bg-[#0e0e10] overflow-hidden group">
+                        <Image
+                            src="/aaa.png"
+                            alt="Featured Event"
+                            fill
+                            className="object-cover"
+                        />
+                        <div className="absolute inset-0 bg-purple-900/0 group-hover:bg-purple-900/50 transition-all duration-300" />
                     </div>
 
                     {/* RIGHT: Event Details */}
@@ -76,7 +63,7 @@ export default function FeaturedEvent() {
                         </div>
 
                         {/* CTA Button */}
-                        <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-black text-sm font-bold hover:bg-gray-100 transition-colors">
+                        <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-black text-sm font-bold hover:bg-[#7c3aed] hover:text-white transition-colors">
                             Apply to Hack
                             <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
