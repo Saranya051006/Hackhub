@@ -23,6 +23,22 @@ export default function HackHubAuth() {
           box-sizing: border-box;
         }
 
+        /* Autofill fix */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.03) inset !important;
+          box-shadow: 0 0 0 1000px rgba(255,255,255,0.03) inset !important;
+          -webkit-text-fill-color: #ffffff !important;
+          caret-color: #ffffff !important;
+          border: 1px solid rgba(255,255,255,0.07) !important;
+          transition: background-color 9999s ease-in-out 0s;
+        }
+
+
+
+
         .hh-root {
           font-family: 'Space Grotesk', sans-serif;
           min-height: 100vh;
