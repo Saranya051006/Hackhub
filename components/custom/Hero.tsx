@@ -3,7 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 
-export default function Hero() {
+interface HeroProps {
+    onExplore?: () => void;
+}
+
+export default function Hero({ onExplore }: HeroProps) {
     return (
         <section className="relative w-full min-h-[calc(100vh-64px)] overflow-hidden bg-[#111113]">
 
@@ -13,7 +17,6 @@ export default function Hero() {
             {/* Content — pointer-events-none so mouse events reach the canvas */}
             <div className="pointer-events-none relative z-10 flex min-h-[calc(100vh-64px)] flex-col justify-center px-6 md:px-12 lg:px-20 py-20">
 
-                {/* 🔥 ONLY CHANGE HERE (alignment fix) */}
                 <div className="max-w-5xl mx-auto lg:mx-0 lg:ml-16">
 
                     {/* Badge */}
@@ -48,6 +51,7 @@ export default function Hero() {
                     <div className="pointer-events-auto flex items-center gap-3">
                         <Button
                             size="lg"
+                            onClick={onExplore}
                             className="h-11 rounded-lg px-6 text-sm font-semibold text-white border border-white/20 bg-white/5 hover:bg-white/10 transition-colors"
                         >
                             Explore Events&nbsp;&nbsp;→
