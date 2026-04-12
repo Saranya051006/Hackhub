@@ -23,7 +23,7 @@ export default function FeaturedEvent() {
                             fill
                             className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-purple-900/0 group-hover:bg-purple-900/50 transition-all duration-300" />
+                        <div className="absolute inset-0 bg-purple-900/0 group-hover:bg-purple-900/20 transition-all duration-300" />
                     </div>
 
                     {/* RIGHT: Event Details */}
