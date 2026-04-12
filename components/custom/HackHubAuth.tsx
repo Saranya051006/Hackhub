@@ -19,7 +19,9 @@ export default function HackHubAuth() {
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        .hh-root * {
+          box-sizing: border-box;
+        }
 
         .hh-root {
           font-family: 'Space Grotesk', sans-serif;

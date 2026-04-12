@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export default function Navbar() {
     return (
@@ -50,9 +51,12 @@ export default function Navbar() {
                     </div>
 
                     {/* Sign Up */}
-                    <button className="h-8 px-4 bg-[#7B3FF2] hover:bg-[#6d35d9] transition-colors text-[13px] font-semibold text-white rounded-none tracking-wide">
+                    <Link
+                        href="/auth"
+                        className="h-8 px-4 flex items-center bg-[#7B3FF2] hover:bg-[#6d35d9] transition-colors text-[13px] font-semibold text-white rounded-none tracking-wide"
+                    >
                         Sign Up
-                    </button>
+                    </Link>
 
                 </div>
             </div>
