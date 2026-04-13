@@ -1,21 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type Tab = "login" | "signup";
 type Role = "participant" | "organizer";
 
 export default function HackHubAuth() {
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<Role>("participant");
-
-  // ✅ REMOVED: btnHovered state — hover is now handled purely via CSS
-  // This eliminates onMouseEnter/onMouseLeave handlers that could interfere with clicks
 
   const handleSignup = async () => {
     if (!email || !password || !name || !confirmPassword) {
@@ -35,7 +35,7 @@ export default function HackHubAuth() {
       return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -46,32 +46,47 @@ export default function HackHubAuth() {
     if (error) {
       alert(error.message);
     } else {
-      alert("Signup successful 🎉");
+      // ✅ redirect to homepage after signup
+      router.push("/");
     }
   };
 
   const handleLogin = async () => {
-    console.log("Login clicked");
-
     if (!email || !password) {
       alert("Enter email and password");
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    console.log(data, error);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
-      alert(error.message);
+      // ✅ if user doesn't exist, tell them to sign up first
+      if (
+        error.message.toLowerCase().includes("invalid login credentials") ||
+        error.message.toLowerCase().includes("user not found") ||
+        error.message.toLowerCase().includes("invalid credential")
+      ) {
+        alert("No account found with this email. Please sign up first.");
+        setTab("signup"); // switch to signup tab automatically
+      } else {
+        alert(error.message);
+      }
     } else {
-      alert("Login successful 🚀");
+      // ✅ redirect to homepage after login
+      router.push("/");
     }
   };
 
+  // ✅ if already logged in, redirect to home
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
-      console.log("SESSION:", data.session);
+      if (data.session) {
+        router.push("/");
+      }
     };
     checkSession();
   }, []);
@@ -108,7 +123,6 @@ export default function HackHubAuth() {
           overflow: hidden;
         }
 
-        /* ✅ FIX: z-index: 0 ensures decorative layers never paint above interactive content */
         .hh-grid {
           position: absolute;
           inset: 0;
@@ -120,7 +134,6 @@ export default function HackHubAuth() {
           background-size: 64px 64px;
         }
 
-        /* ✅ FIX: z-index: 0 on glow — was missing, could overlap .hh-content in some paint orders */
         .hh-glow {
           position: absolute;
           bottom: -60px;
@@ -132,7 +145,6 @@ export default function HackHubAuth() {
           z-index: 0;
         }
 
-        /* ✅ FIX: z-index: 10 keeps all interactive content reliably above decorative layers */
         .hh-content {
           position: relative;
           z-index: 10;
@@ -174,7 +186,6 @@ export default function HackHubAuth() {
           padding: 0 16px;
         }
 
-        /* ✅ FIX: position: relative + z-index: 20 ensures card is always clickable */
         .hh-card {
           width: 100%;
           max-width: 420px;
@@ -232,9 +243,7 @@ export default function HackHubAuth() {
           background: linear-gradient(90deg, #6d28d9, #a21caf);
         }
 
-        .hh-field {
-          margin-bottom: 20px;
-        }
+        .hh-field { margin-bottom: 20px; }
 
         .hh-label-row {
           display: flex;
@@ -272,7 +281,6 @@ export default function HackHubAuth() {
           gap: 10px;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.07);
-          border-radius: 0;
           padding: 12px 14px;
         }
 
@@ -300,15 +308,12 @@ export default function HackHubAuth() {
 
         .hh-input::placeholder { color: #2a3547; }
 
-        .hh-role-wrap {
-          margin-bottom: 24px;
-        }
+        .hh-role-wrap { margin-bottom: 24px; }
 
         .hh-role-toggle {
           display: flex;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.07);
-          border-radius: 0;
           overflow: hidden;
         }
 
@@ -325,7 +330,6 @@ export default function HackHubAuth() {
           transition: background 0.2s, color 0.2s;
           background: transparent;
           color: #3d4e63;
-          border-radius: 0;
         }
 
         .hh-role-btn.active {
@@ -339,11 +343,6 @@ export default function HackHubAuth() {
           background: rgba(255,255,255,0.07);
         }
 
-        /*
-         * ✅ FIX: Hover is now handled entirely in CSS.
-         * Removed onMouseEnter/onMouseLeave handlers from JSX.
-         * This is cleaner and eliminates any handler-interference with onClick.
-         */
         .hh-btn {
           width: 100%;
           padding: 15px;
@@ -352,13 +351,11 @@ export default function HackHubAuth() {
           font-weight: 700;
           letter-spacing: 0.03em;
           border: none;
-          border-radius: 0;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          margin-bottom: 0;
           position: relative;
           z-index: 30;
           background: #ffffff;
@@ -405,7 +402,6 @@ export default function HackHubAuth() {
           height: 48px;
           background: rgba(255,255,255,0.05);
           border: 1px solid rgba(255,255,255,0.09);
-          border-radius: 0;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -493,11 +489,9 @@ export default function HackHubAuth() {
       `}</style>
 
       <div className="hh-root">
-        {/* ✅ z-index: 0 applied via CSS — decorative, never blocks clicks */}
         <div className="hh-grid" />
         <div className="hh-glow" />
 
-        {/* ✅ z-index: 10 — all interactive content lives here */}
         <div className="hh-content">
           <header className="hh-header">
             <span className="hh-logo">HackHub</span>
@@ -505,7 +499,6 @@ export default function HackHubAuth() {
           </header>
 
           <div className="hh-card-wrap">
-            {/* ✅ z-index: 20 on .hh-card via CSS */}
             <div className="hh-card">
               <div className="hh-card-header">
                 <span className="hh-access-title">Access Hub</span>
@@ -573,17 +566,12 @@ export default function HackHubAuth() {
                     </div>
                   </div>
 
-                  {/*
-                                     * ✅ FIX: Removed onMouseEnter/onMouseLeave.
-                                     * Hover effect now lives entirely in .hh-btn:hover CSS rule.
-                                     */}
                   <button onClick={handleLogin} className="hh-btn">
                     Authorize Session
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </button>
-
                   <OAuthSection />
                 </div>
               )}
@@ -695,14 +683,12 @@ export default function HackHubAuth() {
                     </div>
                   </div>
 
-                  {/* ✅ FIX: Removed onMouseEnter/onMouseLeave — hover via CSS only */}
                   <button onClick={handleSignup} className="hh-btn">
                     Create Account
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </button>
-
                   <OAuthSection />
                 </div>
               )}

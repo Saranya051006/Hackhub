@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 
@@ -8,6 +9,8 @@ interface HeroProps {
 }
 
 export default function Hero({ onExplore }: HeroProps) {
+    const router = useRouter();
+
     return (
         <section className="relative w-full min-h-[calc(100vh-64px)] overflow-hidden bg-[#111113]">
 
@@ -59,6 +62,7 @@ export default function Hero({ onExplore }: HeroProps) {
 
                         <Button
                             size="lg"
+                            onClick={() => router.push("/host-event")}
                             className="h-11 rounded-lg px-6 text-sm font-semibold text-white border border-white/20 bg-white/5 hover:bg-white/10 transition-colors"
                         >
                             Host a Hackathon
